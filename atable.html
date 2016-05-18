@@ -1,0 +1,53 @@
+<button id="go">A TABLE !</button>
+<div id="out">
+</div>
+<form id="form">
+	<input name="newplace" type="text" />
+</form>
+
+<ul id="list">
+</ul>
+
+<script>
+function toogleClass(ele, class1) {
+  var classes = ele.className;
+  var regex = new RegExp('\\b' + class1 + '\\b');
+  var hasOne = classes.match(regex);
+  class1 = class1.replace(/\s+/g, '');
+  if (hasOne)
+    ele.className = classes.replace(regex, '');
+  else
+    ele.className = classes + class1;
+}
+
+function reload() {
+if (!places) {places = [];}
+var list = document.getElementById("list");
+list.innerHTML = "";
+places.forEach(function (place) {
+	var element = document.createElement("li");
+	element.innerHTML = place;
+	element.className = "place";
+	list.appendChild(element);
+})
+}
+
+var places = JSON.parse(sessionStorage.getItem("places"));
+reload();
+
+var form = document.getElementById("form");
+form.addEventListener("submit", function (e) {
+	e.preventDefault();
+	e.returnValue = false;
+	var newplace = this.elements["newplace"].value;
+	places.push(newplace);
+	sessionStorage.setItem("places", JSON.stringify(places));
+	form.reset();
+	reload();
+}, false);
+
+document.getElementById("go").addEventListener("click", function (e) {
+	document.getElementById("out").innerHTML = places[Math.floor(Math.random() * places.length)];
+});
+
+</script>
